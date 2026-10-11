@@ -1,20 +1,23 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate, useParams, Link } from 'react-router-dom';
-import { createClient } from '@supabase/supabase-js';
-import { 
-  Eye, EyeOff, Settings, Plus, QrCode, ShoppingBag, 
-  Search, Trash2, Camera, RefreshCw, Facebook, 
-  Instagram, ArrowLeft, LogOut, Shield, Globe 
+import { BrowserRouter, Routes, Route, useNavigate, useParams } from 'react-router-dom';
+import { createClient } from '@supabase/supabase-client'; // الاستيراد الصحيح والمصلح
+import {
+  Eye, EyeOff, Settings, Plus, QrCode, ShoppingBag,
+  Search, Trash2, Camera, RefreshCw, Facebook,
+  Instagram, ArrowLeft, LogOut, Shield, Check
 } from 'lucide-react';
 import QRCodeStyling from 'qr-code-styling';
 
-// ==========================================
-// 1. SUPABASE CLIENT CONFIG
-// ==========================================
-const supabaseUrl = "https://yvbtmgyloweulzuvoogx.supabase.co";
+// ============================================================================
+// 1. SUPABASE CLIENT CONFIG & GLOBAL LIMITS
+// ============================================================================
+const supabaseUrl = "const supabaseUrl = "https://yvbtmgyloweulzuvoogx.supabase.co";
 const supabaseAnonKey = "sb_publishable_AWpMDFg52DO9VzQtAXCTLQ_UBVHJOLG";
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// حد المنتجات المجاني الافتراضي لمتجر ShopPro DZ
+export const FREE_PRODUCTS_LIMIT = 50;
 
 // ==========================================
 // 2. TRANSLATION DICTIONARY
@@ -390,7 +393,14 @@ export const AddProduct = () => {
     e.preventDefault();
     if (!currentMerchant) return;
     setLoading(true);
-    try {
+    // فحص عدد المنتجات الحالي في قاعدة البيانات لمنع تجاوز حد 50 منتجاً
+const { count } = await supabase.from('products').select('*', { count: 'exact', head: true }).eq('merchant_id', currentMerchant.id);
+if (count && count >= 50) {
+  alert("عذراً، لقد وصلت إلى الحد الأقصى المسموح به وهو 50 منتجاً مجانياً!");
+  setLoading(false);
+  return;
+}
+try {
       const { error } = await supabase
         .from('products')
         .insert([{ merchant_id: currentMerchant.id, name, price: parseFloat(price), barcode, image_url: imgPreview }]);
