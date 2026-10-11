@@ -11,8 +11,8 @@ import QRCodeStyling from 'qr-code-styling';
 // ==========================================
 // 1. SUPABASE CLIENT CONFIG
 // ==========================================
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // ==========================================
