@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useParams } from 'react-router-dom';
-import { createClient } from '@supabase/supabase-client'; // الاستيراد الصحيح والمصلح
+import { createClient } from '@supabase/supabase-js'; // تم تصحيح الحزمة هنا
 import {
   Eye, EyeOff, Settings, Plus, QrCode, ShoppingBag,
   Search, Trash2, Camera, RefreshCw, Facebook,
